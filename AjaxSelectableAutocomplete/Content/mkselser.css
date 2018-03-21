@@ -1,7 +1,15 @@
 ﻿body {
     position: relative;
+    font-family:Arial;
+    font-size:14px;
 }
-
+.emulator textarea {
+    width: 550px;
+    font-family: Arial;
+    font-size: 14px;
+    padding: 10px;
+    background: #fbfff0;
+}
 .selseb {
     border: 0 !important;
     clip: rect(0 0 0 0) !important;

@@ -6,9 +6,37 @@
 
 <h2>Selectable Searchbox Sample</h2>
 <div>
+
     <hr />
     <br />
     <input type="text" width="150" id="inp1" class="selser" />
+    <br />
+    <hr />
+    <div class="emulator">
+        <h3>Usage</h3>
+        <textarea rows="24">
+$("#inp1").selser({
+        placeholder: "Select",
+        searchHolder: "Search",
+        multipleSelect: false,
+        singleSelect: true,
+        minChar: 1,
+        delay: 1000,
+        ajaxParams: {
+            url: "SearchVenue",
+            keyname: "keyw",
+            dataType: "json",
+            cache: true,
+            responsefields: ["locationCityID","venueid", "venueName", 
+                            "venueAddress", "venueCountry", "venueCity"],
+            responseKey: "result",
+            displayfields: ["venueName", "venueCity"],
+            displaykeyname: "venueid",
+            inputAttributes: ["venueid", "venueName", "code"],
+        }
+});
+</textarea>
+    </div>
 </div>
 
 
@@ -28,6 +56,15 @@
             minChar: 1,
             delay: 1000,
             ajaxParams: {
+                //url: "https://api.github.com/users/hadley/orgs",
+                //keyname: "",
+                //dataType: "json",
+                //responsefields: ["login", "id", "url", "repos_url"],
+                //responseKey:"",
+                //displayfields: ["login"],
+                //displaykeyname: "login",
+                //inputAttributes: ["login", "id", "url"],
+
                 url: "SearchVenue",
                 keyname: "keyw",
                 dataType: "json",

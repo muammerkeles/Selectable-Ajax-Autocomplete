@@ -1,4 +1,8 @@
-﻿; (function ($) {
+﻿/*!
+ * Ajax Autocomplete Selectbox, by Muammer Keleş.
+ */
+
+; (function ($) {
     var defaults = {
         multipleSelect: false,
         singleSelect: true,
@@ -170,8 +174,9 @@
 
                 },
                 success: function (_data) {
+                     
                     var dt = _data;
-                    if ($options.ajaxParams.responseKey != null || $options.ajaxParams.responseKey != "") {
+                    if ($options.ajaxParams.responseKey != null && $options.ajaxParams.responseKey != "") {
                         dt = _data[$options.ajaxParams.responseKey];
                     }
                     if ($options.ajaxParams.cache && dt.length > 0) {
@@ -188,13 +193,22 @@
         function ShowResult(dt) {
 
             panel.container.find(".ul-res").html("");
-
+            console.log("dt", dt);
             if (dt.length <= 0) {
                 var obj = ["No result"];
                 panel.container.find(".ul-res").append("<li class='litems' disabled> noresult</li>");
             } else {
+                console.log("$options.ajaxParams.displayfields.split(',')", $options.ajaxParams.displayfields);
+
                 $.each(dt, function (x, item) {
-                    panel.container.find(".ul-res").append("<li class='litems'> " + item.venueName + "</li>");
+                    var displayfs="",attrs="";
+                    $.each($options.ajaxParams.displayfields, function (x, y) {
+                        displayfs += item[y] + " ";
+                    });
+                    $.each($options.ajaxParams.inputAttributes, function (x, y) {
+                        attrs += " data-" + y + "='" + item[y] + "' ";
+                    });
+                    panel.container.find(".ul-res").append("<li class='litems' " + attrs + " > " + displayfs + "</li>");
                 })
             }
             panel.input.removeClass("inp-loading");
@@ -209,19 +223,29 @@
             }
         });
         function repointcontainer() {
-            var _stop = panel.span.position().top;
+            var _stop = panel.span.offset().top;
             panel.container.css("width", panel.span.width());
-            panel.container.css("left", 0);
-            panel.container.css("top", (_stop + panel.span.height()) -10);
+            panel.container.css("left", panel.span.offset().left);
+            panel.container.css("top", (_stop + panel.span.height()) - 10);
         };
+        //function repointcontainer() {
+        //    var _stop = panel.span.position().top;
+        //    panel.container.css("width", panel.span.width());
+        //    panel.container.css("left", 0);
+        //    panel.container.css("top", (_stop + panel.span.height()) -10);
+        //};
         //panel.container.on("focusout", function (focusEvent) {
         //    /console.log("secondTarget ", focusEvent.relatedTarget)
         //});
         panel.container.on("click", ".litems", function () { 
             if ($(this).attr("disabled")) return;
-
+            var clickitem = $(this);
             panel.label.html($(this).html());
             selecteElement = $(this);
+            $.each($options.ajaxParams.inputAttributes, function (x, y) {
+                console.log("y",y)
+                $el.attr("data-"+y, clickitem.attr("data-" + y));
+            });
             focusIndex = $(this).index();
             focusItem(focusIndex);
             panel.span.trigger("click");
