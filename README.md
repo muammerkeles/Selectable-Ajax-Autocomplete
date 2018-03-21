@@ -1,7 +1,17 @@
 # Selectable-Ajax-Autocomplete
 Selectable Ajax Autocomplete Input.
 
+First of all what is difference from Select2 in Ajax-Autocomplete?  
+This provides you to use Ajax-Autocomplete like Select element.  
+
    ```html
+
+<script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>  
+<script src="https://code.jquery.com/ui/1.11.4/jquery-ui.min.js"></script>  
+
+<script src="Content/mkselser.js"></script>  
+<link href="Content/mkselser.css" rel="stylesheet" />  
+
 <input type="text" id="inp1" />
    ```
      
