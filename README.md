@@ -34,10 +34,11 @@ $(function(){
 
 
 
- > Note
- > if need use a **key**, example search city with  **cityname** like below,
- > url      :   **https://blabla.com/city/**  
- > keyname  :    **cityname**  
-   
+ > Note  
+ > if need use a **key**, example search city with  **cityname** should be like below,  
+  ```javascript
+  url      :   https://blabla.com/city/    
+  keyname  :    cityname    
+```
  
 
