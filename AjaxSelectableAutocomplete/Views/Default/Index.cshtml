@@ -1,0 +1,47 @@
+﻿
+@{
+    ViewBag.Title = "Selectable Ajax-Autocomplete Sample";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Selectable Searchbox Sample</h2>
+<div>
+    <hr />
+    <br />
+    <input type="text" width="150" id="inp1" class="selser" />
+</div>
+
+
+<script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+<script src="https://code.jquery.com/ui/1.11.4/jquery-ui.min.js" integrity="sha256-xNjb53/rY+WmG+4L6tTl9m6PpqknWZvRt0rO1SRnJzw=" crossorigin="anonymous"></script>
+
+<script src="@Url.Content("~/Content/mkselser.js")"></script>
+<link href="@Url.Content("~/Content/mkselser.css")" rel="stylesheet" />
+
+<script>
+    $(function () {
+        $(".selser").selser({
+            placeholder: "Select",
+            searchHolder: "Search",
+            multipleSelect: false,
+            singleSelect: true,
+            minChar: 1,
+            delay: 1000,
+            ajaxParams: {
+                url: "SearchVenue",
+                keyname: "keyw",
+                dataType: "json",
+                cache: true,
+                responsefields: ["locationCityID", "venueid", "venueName", "venueAddress", "venueCountry", "venueCity"],
+                responseKey: "result",
+
+                displayfields: ["venueName", "venueCity"],
+                displaykeyname: "venueid",
+                inputAttributes: ["venueid", "venueName", "code"],
+
+            }
+        });
+    });
+
+
+</script>
