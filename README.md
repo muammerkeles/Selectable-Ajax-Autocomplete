@@ -1,5 +1,5 @@
-# Selectable-Ajax-Autocomplete
-Selectable Ajax Autocomplete Input.
+# Selectbox-Ajax-Autocomplete
+Selectbox Ajax Autocomplete Input.
 
 First of all what is difference from Select2 in Ajax-Autocomplete?  
 This provides you to use Ajax-Autocomplete like Select element.  
