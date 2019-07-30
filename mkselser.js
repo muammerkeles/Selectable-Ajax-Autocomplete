@@ -1,5 +1,6 @@
 ﻿/*!
  * Ajax Autocomplete Selectbox, by Muammer Keleş.
+V2
  */
 
 ; (function ($) {
@@ -8,20 +9,25 @@
         singleSelect: true,
         minChar: 2,
         delay: 300,
+        onchange: function () {
+            
+        },
         placeholder: "Select",
         searchHolder: "Search something",
         attributes: [],
         ajaxParams: {
             url: null,
-            keyname: null,
+            paramName: null,
+            staticParams: null,
             dataType: null,
             cache: true,
             responsefields: null,
             responseKey: null,
             displayfields: [],
-            displaykeyname: null,
+            valuekey:null,
             attributes: []
-        }
+        },
+        defaultdata: null //  {display:"venualdja ldkaj dlak dla",inputAttributes: { "venueid": "5" }},
     };
 
     /// $el = input element
@@ -66,36 +72,36 @@
             if ($options.ajaxParams.url == null) {
                 console.log("Ajax-Url wasn't defined!"); return false;
             }
-            if ($options.ajaxParams.keyname == null) {
-                console.log("KeyName for Ajax-Url wasn't defined!"); return false;
+            if ($options.ajaxParams.paramName == null) {
+                console.log("paramName for Ajax-Url wasn't defined!"); return false;
             }
             if ($options.ajaxParams.responsefields == null) {
                 console.log("responsefields for Ajax-Url wasn't defined!"); return false;
             }
             var keyCode = $.ui.keyCode;
-            panel.input.on("keyup", function (event) {
+            panel.input.on("keyup input", function (event) {
                 switch (event.keyCode) {
                     case keyCode.PAGE_UP:
                         _keyEvent("previousPage", event);
                         break;
-                    case keyCode.PAGE_DOWN: 
+                    case keyCode.PAGE_DOWN:
                         _keyEvent("nextPage", event);
                         break;
-                    case keyCode.UP: 
+                    case keyCode.UP:
                         _keyEvent("previous", event);
                         break;
-                    case keyCode.DOWN: 
+                    case keyCode.DOWN:
                         _keyEvent("next", event);
                         break;
                     case keyCode.ENTER:
-                         
-                        if (focusIndex>-1) {  
+
+                        if (focusIndex > -1) {
                             event.preventDefault();
                             selectItem(event);
                         }
                         break;
                     case keyCode.TAB:
-                        
+
                         break;
                     case keyCode.ESCAPE:
                         if (panel.input.is(":visible")) {
@@ -103,23 +109,26 @@
                             event.preventDefault();
                         }
                         break;
-                    default:  
+                    default:
                         $this._value = $(this).val();
                         _searchTimeout(event);
                         break;
                 }
-            }).on("keypress", function (e) {
-
-            }).on("input", function (e) {
-
-            }).on("focus", function (e) {
-
-            }).on("blur", function (e) {
-
             });
-
-
         };
+
+        if ($options.defaultdata != null) {
+            var _dfdata = $options.defaultdata;
+            var _df_display= $options.defaultdata.display;
+            var _df_inp_attr = $options.defaultdata.inputAttributes;
+            panel.label.html(_df_display);
+            $.each(_df_inp_attr, function (x, y) {
+                if (y != undefined && y != null && y != "") {
+                    applySelect(x, y);
+                }
+            });
+            //$options.onchange(_dfdata);
+        }
 
         function _delay(handler, delay) {
             function handlerProxy() {
@@ -129,11 +138,16 @@
             var instance = this;
             return setTimeout(handlerProxy, delay || 0);
         };
-        function _searchTimeout(event, _val) {
+        function _searchTimeout(event) {
             panel.input.addClass("inp-loading");
-
+            if ($this._value.length < $options.minChar) {
+                panel.input.removeClass("inp-loading");
+                console.log("min char is less than val");
+                return;
+            }
             clearTimeout(this.searching);
             this.searching = _delay(function () {
+
                 // Search if the value has changed, or if the user retypes the same value (see #7434)
                 var equalValues = $this._value === panel.input.val(),
                     //menuVisible = $this.menu.element.is(":visible"),
@@ -142,6 +156,8 @@
                 if (!equalValues || (equalValues && !modifierKey)) {
                     $this.selectedItem = null;
                     search(null, event);
+                } else {
+                    panel.input.removeClass("inp-loading");
                 }
 
             }, $options.delay);
@@ -151,13 +167,22 @@
         var search = function (value, event) {
             value = value != null ? value : $this._value; 
             if (value.length < $options.minChar) {
+                panel.input.removeClass("inp-loading");
                 console.log("min char is less than val", value);
                 return;//this.close(event);
             }
             return _search(value); 
         }
         var _search = function (value) { 
-            var $_uri = $options.ajaxParams.url + "?" + $options.ajaxParams.keyname + "=" + value;
+            var _staticparams = "";
+            if ($options.ajaxParams.staticParams != null) {
+                $.each($options.ajaxParams.staticParams, function (si, sv) {
+                    _staticparams += si + "=" + sv + "&";
+                });
+            };
+
+            var $_uri = $options.ajaxParams.url + "?" + _staticparams + $options.ajaxParams.paramName + "=" + value;
+            console.log("requested", $_uri);
             panel.input.addClass("inp-loading"); 
             $.ajax({
                 url: $_uri, type: "GET",
@@ -183,6 +208,7 @@
                         cachedata.set($_uri, dt);
                     }
                     console.log("CACHE DID NOT USE!");
+                    
                     ShowResult(dt);
 
                 }
@@ -191,14 +217,12 @@
         }
 
         function ShowResult(dt) {
-
-            panel.container.find(".ul-res").html("");
-            console.log("dt", dt);
+            focusIndex = -1;
+            panel.container.find(".ul-res").html(""); 
             if (dt.length <= 0) {
                 var obj = ["No result"];
                 panel.container.find(".ul-res").append("<li class='litems' disabled> noresult</li>");
-            } else {
-                console.log("$options.ajaxParams.displayfields.split(',')", $options.ajaxParams.displayfields);
+            } else { 
 
                 $.each(dt, function (x, item) {
                     var displayfs="",attrs="";
@@ -242,15 +266,22 @@
             var clickitem = $(this);
             panel.label.html($(this).html());
             selecteElement = $(this);
-            $.each($options.ajaxParams.inputAttributes, function (x, y) {
-                console.log("y",y)
-                $el.attr("data-"+y, clickitem.attr("data-" + y));
+            $.each($options.ajaxParams.inputAttributes, function (x, y) { 
+                applySelect(y, clickitem.attr("data-" + y));
             });
             focusIndex = $(this).index();
             focusItem(focusIndex);
             panel.span.trigger("click");
+            $options.onchange(clickitem);
+
         });
-        
+        function applySelect(attrName, attrVal) {
+            $el.attr("data-" + attrName, attrVal);
+            if (attrName == $options.ajaxParams.valuekey) {
+                // input value olarak atanan deger bu ise input value ayarlıyoruz
+                $el.val(attrVal);
+            }
+        }
         function _isEventTargetInWidget(event) {
             //var par = $(event.target).parent();
             
@@ -269,13 +300,11 @@
             }
         });
         function _keyEvent(keyEvent, event) {
-            if (panel.container.is(":visible")) {
-                console.log("moved");
+            if (panel.container.is(":visible")) { 
                 _move(keyEvent, event);
                 // Prevents moving cursor to beginning/end of the text field in some browsers
                 event.preventDefault();
-            } else
-                console.log("not visible");
+            } 
         };
         function _move(direction, event) {
             switch (direction) {
