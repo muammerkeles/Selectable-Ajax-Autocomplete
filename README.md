@@ -26,18 +26,20 @@ $(function(){
       searchHolder: "Search",  
       multipleSelect: false,  
       singleSelect: true,  
-      minChar: 1,  
+      minChar: 2,  
       delay: 1000,  
       ajaxParams: {  
             url: "https://api.github.com/users/hadley/orgs",  
-            keyname: "",  
+            staticParams: { "bycache":false },  
+            paramName : "",
             dataType: "json",  
             responsefields: ["login", "id", "url", "repos_url"],  
             responseKey:"",  
             displayfields: ["login"],  
             displaykeyname: "login",  
             inputAttributes: ["login", "id", "url"],  
-      }  
+      },
+       defaultdata: 
     });  
 });
   ``` 
