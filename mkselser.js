@@ -40,7 +40,6 @@ V2
         var cachedata = {
             data: {},
             timeout: 30000,
-            data: {},
             remove: function (url) {
                 delete cachedata.data[url];
             },
