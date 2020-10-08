@@ -10,7 +10,6 @@ But the plugin support your work above, if you need to "Queryable Select list" f
    ```html
 
 <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>  
-<script src="https://code.jquery.com/ui/1.11.4/jquery-ui.min.js"></script>  
 
 <script src="Content/mkselser.js"></script>  
 <link href="Content/mkselser.css" rel="stylesheet" />  
