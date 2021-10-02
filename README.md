@@ -5,7 +5,7 @@ First of all what is difference from Select2 in Ajax-Autocomplete?
 This provides you to use Ajax-Autocomplete like Select element.  
 
 The "Select2" known is useful for particular json-data like below; 
-But the plugin support your work above, if you need to "Queryable Select list" for "completely dynamic data-feeds like API"! 
+But the plugin supports your work for things above. if you need to "Queryable Select List" for "completely dynamic data-feeds such an API"! 
 
    ```html
 
@@ -48,8 +48,8 @@ $(function(){
 
 
 
- > Note  
- > if need use a **key**, example search city with  **cityname** should be like below,  
+ > Note : 
+ > if need to use a **key**, example search city with  **cityname** must be like below,  
   ```javascript
   url      :   https://blabla.com/city/    
   keyname  :    cityname    
